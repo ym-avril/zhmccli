@@ -93,13 +93,12 @@ package_name := zhmccli
 
 # Package version (full version, including any pre-release suffixes, e.g. "0.1.0-alpha1")
 # May end up being empty, if pbr cannot determine the version.
-package_version := $(shell $(PYTHON_CMD) -c "$$(printf 'try:\n from pbr.version import VersionInfo\nexcept ImportError:\n pass\nelse:\n print(VersionInfo(\042$(package_name)\042).release_string())\n')")
+package_version := $(shell $(PYTHON_CMD) -c "from pbr.version import VersionInfo; print(VersionInfo('$(package_name)').release_string())")
 
 # Python versions
-python_version := $(shell $(PYTHON_CMD) tools/python_version.py 3)
-python_mn_version := $(shell $(PYTHON_CMD) tools/python_version.py 2)
-python_m_version := $(shell $(PYTHON_CMD) tools/python_version.py 1)
-pymn := py$(python_mn_version)
+python_version := $(shell $(PYTHON_CMD) -c "import sys; sys.stdout.write('{v[0]}.{v[1]}.{v[2]}'.format(v=sys.version_info))")
+pymn := $(shell $(PYTHON_CMD) -c "import sys; sys.stdout.write('py{v[0]}{v[1]}'.format(v=sys.version_info))")
+python_m_version := $(shell $(PYTHON_CMD) -c "import sys; sys.stdout.write('{v[0]}'.format(v=sys.version_info))")
 
 # Directory for the generated distribution files
 dist_dir := dist

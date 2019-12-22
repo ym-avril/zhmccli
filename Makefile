@@ -159,9 +159,9 @@ check_py_files := \
     $(test_py_files) \
 
 ifdef TESTCASES
-pytest_opts := -k $(TESTCASES)
+  pytest_opts := $(TESTOPTS) -k $(TESTCASES)
 else
-pytest_opts :=
+  pytest_opts := $(TESTOPTS)
 endif
 
 # Files to be built
@@ -208,6 +208,7 @@ help:
 	@echo "  env        - Display the environment as seen by make"
 	@echo 'Environment variables:'
 	@echo "  TESTCASES=... - Testcase filter for pytest -k"
+	@echo "  TESTOPTS=... - Additional options for pytest"
 	@echo "  PACKAGE_LEVEL - Package level to be used for installing dependent Python"
 	@echo "      packages in 'install' and 'develop' targets:"
 	@echo "        latest - Latest package versions available on Pypi"

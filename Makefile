@@ -49,6 +49,7 @@ endif
 # Determine OS platform make runs on.
 ifeq ($(OS),Windows_NT)
   ifdef PWD
+	  # CygWin, Msys, etc.
     PLATFORM := Windows_UNIX
   else
     PLATFORM := Windows_native
@@ -384,7 +385,7 @@ endif
 
 # Distribution archives.
 $(bdist_file): _check_version Makefile $(dist_dependent_files)
-ifneq ($(PLATFORM),Windows)
+ifneq ($(PLATFORM),Windows_native)
 	-$(call RMDIR_FUNC,build $(package_name).egg-info .eggs)
 	$(PYTHON_CMD) setup.py bdist_wheel -d $(dist_dir) --universal
 	@echo 'Done: Created binary distribution archive: $@'
@@ -394,7 +395,7 @@ else
 endif
 
 $(sdist_file): _check_version Makefile $(dist_dependent_files)
-ifneq ($(PLATFORM),Windows)
+ifneq ($(PLATFORM),Windows_native)
 	-$(call RMDIR_FUNC,build $(package_name).egg-info .eggs)
 	$(PYTHON_CMD) setup.py sdist -d $(dist_dir)
 	@echo 'Done: Created source distribution archive: $@'
@@ -404,12 +405,12 @@ else
 endif
 
 $(win64_dist_file): _check_version Makefile $(dist_dependent_files)
-ifeq ($(PLATFORM),Windows)
+ifeq ($(PLATFORM),Windows_native)
 	-$(call RMDIR_FUNC,build $(package_name).egg-info .eggs)
 	$(PYTHON_CMD) setup.py bdist_wininst -d $(dist_dir) -o -t "$(package_name) v$(package_version)"
 	@echo 'Done: Created Windows installable: $@'
 else
-	@echo 'Error: Creating Windows installable requires to run on Windows'
+	@echo 'Error: Creating Windows installable requires to run on native Windows'
 	@false
 endif
 
